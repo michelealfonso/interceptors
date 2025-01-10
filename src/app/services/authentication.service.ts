@@ -7,24 +7,36 @@ export class AuthenticationService {
   private tokenKey = 'authToken';
   private validCredentials = {
     email: 'user@example.com',
-    password: 'password123'  // Credenziali predefinite
+    password: 'password123'
   };
 
   constructor() {}
 
+  private get isBrowser(): boolean {
+    // Verifica se 'localStorage' è definito, il che indica che siamo nel browser
+    return typeof localStorage !== 'undefined';
+  }
+
   login(token: string): void {
-    localStorage.setItem(this.tokenKey, token);  // Salva il token fittizio nel localStorage
+    if (this.isBrowser) {
+      localStorage.setItem(this.tokenKey, token);
+      console.log(this.tokenKey)
+    }
   }
 
   logout(): void {
-    localStorage.removeItem(this.tokenKey);  // Rimuovi il token
+    if (this.isBrowser) {
+      localStorage.removeItem(this.tokenKey);
+    }
   }
 
   isAuthenticated(): boolean {
-    return localStorage.getItem(this.tokenKey) !== null;  // Controlla se c'è un token
+    if (this.isBrowser) {
+      return localStorage.getItem(this.tokenKey) !== null;
+    }
+    return false;
   }
 
-  // Funzione per verificare se le credenziali sono valide
   authenticate(email: string, password: string): boolean {
     return email === this.validCredentials.email && password === this.validCredentials.password;
   }

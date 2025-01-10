@@ -7,23 +7,24 @@ import { CommonModule } from '@angular/common';
   selector: 'app-protected',
   templateUrl: './protected.component.html',
   styleUrls: ['./protected.component.css'],
-  imports: [
-    CommonModule
-  ]
+  imports: [CommonModule]
 })
 export class ProtectedComponent implements OnInit {
 
-  data: any = {}; // Inizializzazione a un oggetto vuoto
+  data: any = {};
 
   constructor(private authService: AuthenticationService, private router: Router) { }
 
   ngOnInit() {
     if (!this.authService.isAuthenticated()) {
-      // Se non autenticato, reindirizza alla pagina di login
       this.router.navigate(['/login']);
     } else {
-      // Se autenticato, simula il caricamento di dati protetti
       this.data = { message: 'Dati protetti per l\'utente autenticato' };
     }
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);  // Reindirizza alla pagina di login dopo il logout
   }
 }
